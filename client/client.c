@@ -8,7 +8,6 @@
 
 #include "include/client.h"
 
-
 #define SA struct sockaddr
 
 void func(int sockfd) {
@@ -18,29 +17,36 @@ void func(int sockfd) {
     int trueOrFalse = 0;
 
     //client enter a name and send it to the server;
-    trueOrFalse++;
-    printf("Enter your name: ");
-    while ((cClientName[n++] = getchar()) != '\n');
-    write(sockfd, cClientName, sizeof(cClientName));
+
 
     // infinite loop
     for (;;) {
-        bzero(buff, sizeof(buff));
-        printf("\n\r%s Enter a String : \n", cClientName);
 
+
+        if(trueOrFalse == 0) {
+            trueOrFalse++;
+            printf("Enter your name: ");
+        }else{
+            bzero(buff, sizeof(buff));
+            printf("\n%s Enter a String : ", cClientName);
+        }
         n = 0;
         while ((buff[n++] = getchar()) != '\n');
+
+        if(trueOrFalse == 1) {
+            trueOrFalse++;
+            strcpy(cClientName, buff);
+        }
 
         write(sockfd, buff, sizeof(buff));
         bzero(buff, sizeof(buff));
         read(sockfd, buff, sizeof(buff));
-        printf("\n\rFrom Server: %s", buff);
+        printf("\nFrom Server: %s", buff);
         if ((strncmp(buff, "exit", 4)) == 0) {
             printf("Client Exit...\n\r");
             break;
         }
     }
-
 }
 
 int client() {

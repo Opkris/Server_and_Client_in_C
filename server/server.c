@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -10,6 +9,7 @@
 
 #include "include/server.h"
 
+char* concat(const char *s1, const char *s2);
 
 // Function designed for chat between client and server.
 void func(int sockfd)
@@ -19,9 +19,11 @@ void func(int sockfd)
     int n;
     int trueOrFalse = 0;
 
+
     trueOrFalse;
     read(sockfd, cClientName, sizeof(cClientName));
     printf("Client is: %s \n\r",cClientName);
+    send(sockfd, concat("Greetings ", cClientName), sizeof(cClientName), 0);
 
     // infinite loop for chat
     for (;;) {
@@ -71,7 +73,8 @@ int server()
 
     // Binding newly created socket to given IP and verification
     if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
-        printf("socket bind failed...\n\r");
+        printf("Socket bind failed...\n\r");
+        printf("Try again in a few moments...\n\r");
         exit(0);
     }
     else
@@ -100,4 +103,13 @@ int server()
 
     // After chatting close the socket
     close(sockfd); sockfd = -1;
+}
+
+char* concat(const char *s1, const char *s2)
+{
+    char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+    // in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
 }
